@@ -1,13 +1,14 @@
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.TreeModel;
-import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
@@ -21,7 +22,7 @@ public class GraphDBExample {
      */
     public static void main(String[] args) {
 
-        String repositoryName = "1234-4321";
+        String repositoryName = "ProjectB";
 
         HTTPRepository repository = new HTTPRepository("http://localhost:7200/repositories/" + repositoryName);
         RepositoryConnection connection = repository.getConnection();
@@ -73,6 +74,16 @@ public class GraphDBExample {
                 System.out.println("?p = " + solution.getValue("p"));
             }
         }
+
+        // Create a model with all triples from the remote repository
+        connection.begin();
+        RepositoryResult<Statement> statements = connection.getStatements(null, null, null);
+        model.clear();
+        for (Statement statement : statements) {
+            model.add(statement);
+        }
+        System.out.println(model.size());
+        connection.commit();
 
         connection.close();
         repository.shutDown();
