@@ -30,7 +30,7 @@ public class RestrictionExample {
         IRI Person = Values.iri(ex, "Person");
         IRI friendOf = Values.iri(ex, "friendOf");
 
-        // add our first statement: Picasso is an Artist
+        // add our simple schema: two classes and one object property
         model.add(Entity, RDF.TYPE, OWL.CLASS);
         model.add(Person, RDF.TYPE, OWL.CLASS);
         model.add(friendOf, RDF.TYPE, OWL.OBJECTPROPERTY);
@@ -39,6 +39,7 @@ public class RestrictionExample {
         BNode restriction = Values.bnode();
 
         // Add triples to represent the someValuesFrom restriction
+        // All people have some friend who is Person
 
         // Person subclass of the restriction
         model.add(Person, RDFS.SUBCLASSOF, restriction);
